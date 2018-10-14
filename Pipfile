@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 networkx = "*"
 matplotlib = "*"
+python-louvain = "*"
+twitterapi = "*"
 
 [dev-packages]
 

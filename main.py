@@ -30,11 +30,13 @@ import networkx as nx
 import sys
 import time
 from TwitterAPI import TwitterAPI
+import community
 
-consumer_key = 'PvyYvRKzcM8sQmtQS17SMuJJW'
-consumer_secret = 'LP9Y85by1QgDWZnbxgDRtevpdWXLl38hJoN3JUB2ueHrpyRdVy'
-access_token = '2797388610-ObMaiSLpL4iMPn8WotIlwZPyeX2Fpz2O9kCS3m0'
-access_token_secret = 'HzcWWScASzQUCUPvCbFqaPiJLvH0zIEWtb3v3WgIWYjZe'
+consumer_key = 'S2Q3pQciEhSrBFAmOJuGjWgTP'
+consumer_secret = 'cPiDwjIil0bfr9BFPEDhmPLHVb4Ozbtou3k0K2ky3nhazuRPpq'
+access_token = '2797388610-osYUypGsFiO419HvefvLoXaIQ7EX7vENQ1UFG0f'
+access_token_secret = 'xvhTkypU2uF7Kx17U1wa0SOeOVnNWEnyOOWohPitC3NEf'
+
 
 
 
@@ -341,13 +343,32 @@ def main():
 
     graph = create_graph(users, friend_counts)
     print('graph has %s nodes and %s edges' % (len(graph.nodes()), len(graph.edges())))
-    draw_network(graph, users, 'network.png')
+    # draw_network(graph, users, 'network.png')
     print('network drawn to network.png')
 
     dc = nx.degree_centrality(graph)
 
     for screen_name in screen_names:
         print(f"Degree Centrality of {screen_name} is {dc[screen_name]}")
+
+    partition = community.best_partition(graph)
+
+    #drawing
+    size = float(len(set(partition.values())))
+    pos = nx.spring_layout(graph)
+    count = 0.
+    for com in set(partition.values()) :
+        count = count + 1.
+        list_nodes = [nodes for nodes in partition.keys()
+                                    if partition[nodes] == com]
+        nx.draw_networkx_nodes(graph, pos, list_nodes, node_size = 20,
+                                    node_color = str(count / size))
+
+
+    nx.draw_networkx_edges(graph, pos, alpha=0.5)
+    plt.show()
+
+
 
 
 if __name__ == '__main__':
